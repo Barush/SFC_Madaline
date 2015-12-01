@@ -5,6 +5,10 @@
  */
 package sfc_madaline;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -133,9 +137,12 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_inputSelectorActionPerformed
 
     private void runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runActionPerformed
-        params = new Settings(infileArray.getText());
+        try {
+            params = new Settings(infileArray.getText());
+        } catch (IOException ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         params.setAdaN(Integer.parseInt((String)madalinesSelector.getSelectedItem()));
-        params.setAndOrN(Integer.parseInt((String)outputSelector.getSelectedItem()));
         params.setInCnt(Integer.parseInt((String)inputSelector.getSelectedItem()));
     }//GEN-LAST:event_runActionPerformed
 
