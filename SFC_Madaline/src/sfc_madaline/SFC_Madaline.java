@@ -27,7 +27,7 @@ public class SFC_Madaline {
         Settings params = new Settings("data.txt");
         Network n = new Network(params.getInCnt(), params.getAdaN(), params.getOutCnt());
         for(int i = 0; i < params.getDataLen(); i++){
-            System.out.println("Input vector " + i);
+            System.out.println("****** Input vector " + i + " **********");
             //load input
             n.loadInput(params, i);
             n.loadDesired(params, i);
