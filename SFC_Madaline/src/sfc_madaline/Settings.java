@@ -23,12 +23,14 @@ public class Settings {
     private String inFile;
     private int dataLen;
     private double[] data;
+    private double tolerance;
     
     public Settings(String filename) throws IOException{
         inFile = filename;
-        inCnt = 1;
+        inCnt = 2;
         adalinesN = 2;
         outCnt = 1;
+        tolerance = 0.0001;
         readFile();
     }
     
@@ -42,6 +44,8 @@ public class Settings {
     public void setInFile(String filename){ inFile = filename;}
     public int getDataLen(){ return dataLen;}
     public void setDataLen(int n){ dataLen = n;}
+    public double getTolerance(){ return tolerance;}
+    public void setTolerance(double t){ tolerance = t;}
     
     public double getNthInput(int n){
         return data[n];

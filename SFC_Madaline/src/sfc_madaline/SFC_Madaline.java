@@ -27,15 +27,25 @@ public class SFC_Madaline {
         Settings params = new Settings("data.txt");
         Network n = new Network(params.getInCnt(), params.getAdaN(), params.getOutCnt());
         for(int i = 0; i < params.getDataLen(); i++){
+            System.out.println("Input vector " + i);
             //load input
             n.loadInput(params, i);
             n.loadDesired(params, i);
             
             //count values
+            n.forwardPass();
             
-            //decide if learned
+            //decide if learned already
+            if(n.isItLearned(params)){
+                System.out.println("vector" + i + " OK.");
+                continue;
+            }
+            else{
+                System.out.println("vector " + i + " needs help.");
+            }
             
             //learn
+            n.backwardPass();
         }
     }
     
