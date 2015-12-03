@@ -16,38 +16,46 @@ import java.util.Random;
 public class Network {
     
     private double[] inVect;
-    private double[] adaVect;    
+    private double[] adaU;    
+    private double[] adaOut;
     private double[] outVect;
     
     private double[] desired;
     
-    private double[] weights1to2;
-    private double[] weights2to3;
+    private double[] weights;
+    private Boolean[] functions;    // TRUE = AND, FALSE = OR
     
     private double error;
     
     public Network(int inSize, int adaCnt, int outSize){
         inVect = new double[inSize];
-        adaVect = new double[adaCnt];
+        adaU = new double[adaCnt];
+        adaOut = new double[adaCnt];
         outVect = new double[outSize];
         
         desired = new double[outSize];
         
-        weights1to2 = new double[adaCnt*inSize];
-        weights2to3 = new double[outSize*adaCnt];
+        weights = new double[adaCnt*inSize];
+        functions = new Boolean[outSize];
         
-        for(int i = 0; i < weights1to2.length; i++){
-             weights1to2[i] = randomFill();
-        }
-        for(int i = 0; i < weights2to3.length; i++){
-             weights2to3[i] = randomFill();
+        for(int i = 0; i < adaCnt; i++){
+             weights[i] = randomDbl();
         }
         
+        for(int i = 0; i < outSize; i++){
+            functions[i] = randomBool();
+        }
+        //printWeights();
     }
     
-    public double randomFill(){
-        Random r = new Random();
+    public double randomDbl(){
+        Random r = new Random(System.currentTimeMillis());
         return r.nextDouble();
+    }
+    
+    public Boolean randomBool(){
+        Random r = new Random(System.currentTimeMillis());
+        return r.nextBoolean();
     }
     
     public void loadInput(Settings s, int n){
@@ -68,41 +76,7 @@ public class Network {
         countAda();
         countOutput();
         printVector(outVect);
-    }
-    
-    public void countAda(){
-        double val;
-        for(int i = 0; i < adaVect.length; i++){
-            val = 0;
-            for(int j = 0; j < inVect.length; j++){
-                //System.out.println(weights1to2[i*inVect.length + j] + " * " + inVect[j]);
-                val += weights1to2[i*inVect.length + j] * inVect[j];
-            }//for all prev neurons
-            adaVect[i] = val;
-        }//for all adalines      
-    }
-    
-    public void countOutput(){
-        double val;
-        for(int i = 0; i < outVect.length; i++){
-            val = 0;
-            for(int j = 0; j < adaVect.length; j++){
-                val += weights2to3[i*adaVect.length + j] * adaVect[j];
-            }//for all prev neurons
-            outVect[i] = val;
-        }//for all adalines    
-    }
-    
-    public double countError(){
-        double err = 0;
-        for(int i = 0; i < outVect.length; i++){
-               //System.out.println("Value " + outVect[i] + " compared to " + desired[i]);
-               err += abs(outVect[i] - desired[i]);
-               //System.out.println("err += " + abs(outVect[i] - desired[i]));
-        }
-        
-        return err;
-    }
+    }  
     
     public Boolean isItLearned(Settings s){
         error = countError();
@@ -113,20 +87,20 @@ public class Network {
         return false;
     }
     
-    public void backwardPass(){
+    public void backwardPass(Settings s){
         //seradit - do druhyho pole
-        double[] tmpAda = new double[adaVect.length];
-        System.arraycopy(adaVect, 0, tmpAda, 0, adaVect.length);
+        double[] tmpAda = new double[adaU.length];
+        System.arraycopy(adaU, 0, tmpAda, 0, adaU.length);
         double thresh = 1.0;
         double min = 1.5;
         double prevmin = 0.0;
         double value;
         int mini = 0;
         
-        for(int i = 0; i < adaVect.length; i++){
+        for(int i = 0; i < adaU.length; i++){
             //najit nejmensi u
-            for(int j = 0; j < adaVect.length; j++){
-                value = abs(adaVect[j]);
+            for(int j = 0; j < adaU.length; j++){
+                value = abs(adaU[j]);
                 if((value < min) && (value < thresh) && (value > prevmin)){
                     min = value;
                     mini = j;
@@ -134,31 +108,99 @@ public class Network {
             }
             
             //zmenit znaminko
-            adaVect[mini] *= (-1);
-            //System.out.print("Ada po zmene: ");
-            //printVector(adaVect);
+            adaOut[mini] *= (-1);
 
             //vypocitat vystup
             countOutput();
             double newError = countError();
 
             //pokud se vystup zlepsil, pridat zmenu do vahove matice
-            if(newError > error){
-                System.out.println("Vysledek " + newError + " je horsi nez " + error);
-                adaVect[mini] *= (-1);
+            if(newError < error){
+                System.out.println("Vysledek " + newError + " je lepsi nez " + error);
+                weights[mini*inVect.length] *= (-1);
+                error = newError;
             }
             
+            if(newError < s.getTolerance()){
+                break;
+            }
             prevmin = min;
         }
         
         
     }
     
+    public void countAda(){
+        double val;
+        for(int i = 0; i < adaU.length; i++){
+            val = 0;
+            for(int j = 0; j < inVect.length; j++){
+                //System.out.println(weights1to2[i*inVect.length + j] + " * " + inVect[j]);
+                val += weights[i*inVect.length + j] * inVect[j];
+            }//for all prev neurons
+            adaU[i] = val;
+            adaOut[i] = Math.signum(val);
+        }//for all adalines      
+    }
+    
+    public void countOutput(){
+        int cnt;
+        for(int i = 0; i < outVect.length; i++){
+            cnt = 0;
+            for(int j = 0; j < adaOut.length; j++){
+                if(adaOut[j] > 0.0){
+                    cnt++;
+                }
+            }//for all prev neurons
+                        
+            if(functions[i]){
+                //AND func
+                if(cnt == adaOut.length){
+                    outVect[i] = 1.0;
+                }
+                else{
+                    outVect[i] = -1.0;
+                }
+            }
+            else{
+                //OR func
+                if(cnt > 0){
+                    outVect[i] = 1.0;
+                }
+                else{
+                    outVect[i] = -1.0;
+                }            
+            }
+            
+        }//for all outputs    
+    }
+    
+    public double countError(){
+        double err = 0.0;
+        for(int i = 0; i < outVect.length; i++){
+               //System.out.println("Value " + outVect[i] + " compared to " + desired[i]);
+               err += abs(outVect[i] - desired[i]);
+               //System.out.println("err += " + abs(outVect[i] - desired[i]));
+        }
+        
+        return err;
+    }
+   
+    
     public void printVector( double[] vect){
         for(int i = 0; i < vect.length; i++){
             System.out.print(vect[i] + " ");
         }
         System.out.println();
+    }
+    
+    public void printWeights(){       
+        System.out.println("Weights value: ");
+        for(int i = 0; i < weights.length; i++){
+            if(i < weights.length){
+                System.out.println(weights[i] + " ");
+            }
+        }
     }
     
 }

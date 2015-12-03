@@ -30,7 +30,7 @@ public class Settings {
         inCnt = 2;
         adalinesN = 2;
         outCnt = 1;
-        tolerance = 0.0001;
+        tolerance = 0.05;
         readFile();
     }
     
