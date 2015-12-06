@@ -41,108 +41,46 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="infileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="inputsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="outputsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="madalinesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="toleranceLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="outputSelector" alignment="0" max="32767" attributes="0"/>
-                  <Component id="inputSelector" max="32767" attributes="0"/>
+                  <Component id="toleranceArray" max="32767" attributes="0"/>
                   <Component id="infileArray" max="32767" attributes="0"/>
-                  <Component id="run" alignment="0" max="32767" attributes="0"/>
-                  <Component id="madalinesSelector" min="-2" pref="186" max="-2" attributes="0"/>
+                  <Component id="run" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="56" max="32767" attributes="0"/>
+              <EmptySpace pref="36" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="madalinesSelector" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="madalinesLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="inputsLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="inputSelector" alignment="2" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="outputsLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="outputSelector" alignment="2" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="infileLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="infileArray" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="toleranceArray" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="toleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
               <Component id="run" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="46" max="32767" attributes="0"/>
+              <EmptySpace pref="64" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="madalinesLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Po&#x10d;et Madaline neuron&#x16f;:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="inputsLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Po&#x10d;et vstup&#x16f;:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="outputsLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Po&#x10d;et v&#xfd;stup&#x16f;:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="infileLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Vstupn&#xed; soubor:"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="inputSelector">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
-          </StringArray>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputSelectorActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="outputSelector">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
-          </StringArray>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="infileArray">
       <Properties>
@@ -157,23 +95,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JComboBox" name="madalinesSelector">
+    <Component class="javax.swing.JLabel" name="toleranceLabel">
       <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
-          </StringArray>
-        </Property>
+        <Property name="text" type="java.lang.String" value="Tolerance:"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="madalinesSelectorActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="toleranceArray">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jTextField1"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

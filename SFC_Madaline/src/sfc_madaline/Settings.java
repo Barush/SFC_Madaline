@@ -25,12 +25,12 @@ public class Settings {
     private double[] data;
     private double tolerance;
     
-    public Settings(String filename) throws IOException{
+    public Settings(String filename, double tol) throws IOException{
         inFile = filename;
         inCnt = 2;
-        adalinesN = 2;
+        adalinesN = 4;
         outCnt = 1;
-        tolerance = 0.05;
+        tolerance = tol;
         readFile();
     }
     
@@ -83,21 +83,25 @@ public class Settings {
         }       
         textReader.close();
         
-        //cut lines into data array
+        //cut lines into data array       
         data = new double[dataLen*dblsPerLine];  
         for(int i = 0; i < dataLen; i++){
             Scanner sc = new Scanner(textData[i]);
             int j = 0;
             while(sc.hasNextDouble()){
+                //System.out.println(i+" * "+dblsPerLine + " + " + j + " > " + data.length);
                 data[i*dblsPerLine + j] = sc.nextDouble();
                 j++;
+                if(j > dblsPerLine){
+                    System.err.println("Na řádku " + i + " příliš mnoho vstupů.");
+                    break;
+                }
             }//for all doubles of a line
             
             //validity check 
-            if (j != dblsPerLine){
-                System.out.println("Na řádku " + i + " nesedí počet I/O se zadáním.");
-            } 
-            
+            if (j < dblsPerLine){
+                System.err.println("Na řádku " + i + " nedostatek vstupů.");
+            }            
         }//for all lines     
     }
     

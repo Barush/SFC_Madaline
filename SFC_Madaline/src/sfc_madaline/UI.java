@@ -36,15 +36,11 @@ public class UI extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        madalinesLabel = new javax.swing.JLabel();
-        inputsLabel = new javax.swing.JLabel();
-        outputsLabel = new javax.swing.JLabel();
         infileLabel = new javax.swing.JLabel();
-        inputSelector = new javax.swing.JComboBox<>();
-        outputSelector = new javax.swing.JComboBox<>();
         infileArray = new javax.swing.JTextField();
         run = new javax.swing.JButton();
-        madalinesSelector = new javax.swing.JComboBox<>();
+        toleranceLabel = new javax.swing.JLabel();
+        toleranceArray = new javax.swing.JTextField();
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -52,22 +48,7 @@ public class UI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        madalinesLabel.setText("Počet Madaline neuronů:");
-
-        inputsLabel.setText("Počet vstupů:");
-
-        outputsLabel.setText("Počet výstupů:");
-
         infileLabel.setText("Vstupní soubor:");
-
-        inputSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        inputSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputSelectorActionPerformed(evt);
-            }
-        });
-
-        outputSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         infileArray.setText("jTextField1");
 
@@ -78,77 +59,59 @@ public class UI extends javax.swing.JFrame {
             }
         });
 
-        madalinesSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        madalinesSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                madalinesSelectorActionPerformed(evt);
-            }
-        });
+        toleranceLabel.setText("Tolerance:");
+
+        toleranceArray.setText("jTextField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(infileLabel)
-                    .addComponent(inputsLabel)
-                    .addComponent(outputsLabel)
-                    .addComponent(madalinesLabel))
-                .addGap(36, 36, 36)
+                    .addComponent(toleranceLabel))
+                .addGap(90, 90, 90)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(outputSelector, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inputSelector, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(toleranceArray)
                     .addComponent(infileArray)
-                    .addComponent(run, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(madalinesSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                    .addComponent(run, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(madalinesSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(madalinesLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(inputsLabel)
-                    .addComponent(inputSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(outputsLabel)
-                    .addComponent(outputSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(infileLabel)
                     .addComponent(infileArray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(toleranceArray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toleranceLabel))
+                .addGap(58, 58, 58)
                 .addComponent(run)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSelectorActionPerformed
-
-    }//GEN-LAST:event_inputSelectorActionPerformed
-
     private void runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runActionPerformed
+        Settings params = null;
+        String filename = infileArray.getText();
+        double tolerance = Double.valueOf(toleranceArray.getText());
+        
         try {
-            params = new Settings(infileArray.getText());
+            params = new Settings(filename, tolerance);
         } catch (IOException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        params.setAdaN(Integer.parseInt((String)madalinesSelector.getSelectedItem()));
-        params.setInCnt(Integer.parseInt((String)inputSelector.getSelectedItem()));
+        
+        Runenv run = new Runenv(params);
+        run.setVisible(true);
     }//GEN-LAST:event_runActionPerformed
-
-    private void madalinesSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_madalinesSelectorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_madalinesSelectorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,33 +148,20 @@ public class UI extends javax.swing.JFrame {
         });
     }
     
-    public void setComponents(){
-        inputSelector.removeAllItems();
-        outputSelector.removeAllItems();
-        madalinesSelector.removeAllItems();
-        
-        for(int i = 1; i < 11; i++){
-            inputSelector.addItem(i+"");
-            outputSelector.addItem(i+"");
-            madalinesSelector.addItem(i+"");
-        }
-        
+    public void setComponents(){        
         infileArray.setText("data.txt");
+        toleranceArray.setText("0.01");
         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField infileArray;
     private javax.swing.JLabel infileLabel;
-    private javax.swing.JComboBox<String> inputSelector;
-    private javax.swing.JLabel inputsLabel;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JLabel madalinesLabel;
-    private javax.swing.JComboBox<String> madalinesSelector;
-    private javax.swing.JComboBox<String> outputSelector;
-    private javax.swing.JLabel outputsLabel;
     private javax.swing.JButton run;
+    private javax.swing.JTextField toleranceArray;
+    private javax.swing.JLabel toleranceLabel;
     // End of variables declaration//GEN-END:variables
     private Settings params;
 }

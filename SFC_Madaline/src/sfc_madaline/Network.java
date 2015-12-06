@@ -8,6 +8,7 @@ package sfc_madaline;
 import static java.lang.Math.abs;
 import java.util.Arrays;
 import java.util.Random;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -23,33 +24,68 @@ public class Network {
     private double[] desired;
     
     private double[] weights;
-    private Boolean[] functions;    // TRUE = AND, FALSE = OR
-    
+    private Boolean[] functions;    // TRUE = AND, FALSE = O   
     private double error;
+    private Settings set;
     
-    public Network(int inSize, int adaCnt, int outSize){
-        inVect = new double[inSize];
-        adaU = new double[adaCnt];
-        adaOut = new double[adaCnt];
-        outVect = new double[outSize];
+    public Network(Settings s){
+        inVect = new double[s.getInCnt()];
+        adaU = new double[s.getAdaN()];
+        adaOut = new double[s.getAdaN()];
+        outVect = new double[s.getOutCnt()];       
+        desired = new double[s.getOutCnt()];      
+        weights = new double[s.getAdaN()*s.getInCnt()];
+        functions = new Boolean[s.getOutCnt()];
+        set = s;
         
-        desired = new double[outSize];
-        
-        weights = new double[adaCnt*inSize];
-        functions = new Boolean[outSize];
-        
-        for(int i = 0; i < adaCnt; i++){
-             weights[i] = randomDbl();
+        Random r = new Random(System.currentTimeMillis());
+        for(int i = 0; i < (s.getAdaN()*s.getInCnt()); i++){
+             weights[i] = randomDbl(r);
         }
         
-        for(int i = 0; i < outSize; i++){
+        for(int i = 0; i < s.getOutCnt(); i++){
             functions[i] = randomBool();
         }
-        //printWeights();
+        printWeights();
     }
     
-    public double randomDbl(){
-        Random r = new Random(System.currentTimeMillis());
+    public double getInput(int i){
+        return inVect[i];
+    }
+    
+    public double getDesired(){
+        return desired[0];
+    }
+    
+    public double getAda(int i){
+        return adaU[i];
+    }
+    
+    public void setAdaI(int i, double val){
+        adaU[i] = val;
+    }
+    
+    public double getAdaOut(int i){
+        return adaOut[i];
+    }
+    
+    public void setAdaOut(int i, double val){
+        weights[i] = val;
+    }
+    
+    public double getOut(int i){
+        return outVect[i];
+    }
+    
+    public void setWeight(int i, double val){
+        weights[i] = val;
+    }
+    
+    public double getWeight(int i){
+        return weights[i];
+    }
+    
+    public double randomDbl(Random r){
         return r.nextDouble();
     }
     
@@ -58,17 +94,17 @@ public class Network {
         return r.nextBoolean();
     }
     
-    public void loadInput(Settings s, int n){
-        int startPos = n*(s.getInCnt() + s.getOutCnt());
-        for(int i = 0; i < s.getInCnt(); i++){
-            inVect[i] = s.getNthInput(startPos + i);
+    public void loadInput(int n){
+        int startPos = n*(set.getInCnt() + set.getOutCnt());
+        for(int i = 0; i < set.getInCnt(); i++){
+            inVect[i] = set.getNthInput(startPos + i);
         }    
     }
     
-    public void loadDesired(Settings s, int n){
-       int startPos = n*(s.getInCnt() + s.getOutCnt()) + s.getInCnt();
-       for(int i = 0; i < s.getOutCnt(); i++){
-            desired[i] = s.getNthInput(startPos + i);
+    public void loadDesired(int n){
+       int startPos = n*(set.getInCnt() + set.getOutCnt()) + set.getInCnt();
+       for(int i = 0; i < set.getOutCnt(); i++){
+            desired[i] = set.getNthInput(startPos + i);
         }    
     }
 
@@ -78,37 +114,44 @@ public class Network {
         printVector(outVect);
     }  
     
-    public Boolean isItLearned(Settings s){
+    public Boolean isItOK(){
         error = countError();
         
-        if(error < s.getTolerance()){
+        if(error < set.getTolerance()){
             return true;
         }
         return false;
     }
     
-    public void backwardPass(Settings s){
+    public SmallestAda findSmallestAda(double prevmin, int prevind){
+        SmallestAda result = new SmallestAda(-1, 15);
+        double value;
+        double thresh = 1.0;
+        
+        for(int j = 0; j < adaU.length; j++){
+            value = abs(adaU[j]);
+            if((value <= result.getVal()) && (value < thresh) && (value >= prevmin) && (j != prevind)){
+                result.setVal(value);
+                result.setI(j);
+            }
+        }
+        return result;
+    }
+    
+    public void backwardPass(){
         //seradit - do druhyho pole
         double[] tmpAda = new double[adaU.length];
         System.arraycopy(adaU, 0, tmpAda, 0, adaU.length);
-        double thresh = 1.0;
-        double min = 1.5;
         double prevmin = 0.0;
-        double value;
-        int mini = 0;
+        int prevind = -1;
+        SmallestAda min;
         
         for(int i = 0; i < adaU.length; i++){
             //najit nejmensi u
-            for(int j = 0; j < adaU.length; j++){
-                value = abs(adaU[j]);
-                if((value < min) && (value < thresh) && (value > prevmin)){
-                    min = value;
-                    mini = j;
-                }
-            }
+            min = findSmallestAda(prevmin, prevind);
             
             //zmenit znaminko
-            adaOut[mini] *= (-1);
+            adaOut[min.getI()] *= (-1);
 
             //vypocitat vystup
             countOutput();
@@ -117,14 +160,15 @@ public class Network {
             //pokud se vystup zlepsil, pridat zmenu do vahove matice
             if(newError < error){
                 System.out.println("Vysledek " + newError + " je lepsi nez " + error);
-                weights[mini*inVect.length] *= (-1);
+                weights[min.getI()*inVect.length] *= (-1);
                 error = newError;
             }
             
-            if(newError < s.getTolerance()){
+            if(newError < set.getTolerance()){
                 break;
             }
-            prevmin = min;
+            prevmin = min.getVal();
+            prevind = min.getI();
         }
         
         
@@ -139,8 +183,13 @@ public class Network {
                 val += weights[i*inVect.length + j] * inVect[j];
             }//for all prev neurons
             adaU[i] = val;
-            adaOut[i] = Math.signum(val);
         }//for all adalines      
+    }
+    
+    public void countAdaOut(){
+        for(int i = 0; i < adaOut.length; i++){
+            adaOut[i] = Math.signum(adaU[i]);
+        }
     }
     
     public void countOutput(){
@@ -187,7 +236,7 @@ public class Network {
     }
    
     
-    public void printVector( double[] vect){
+    public void printVector(double[] vect){
         for(int i = 0; i < vect.length; i++){
             System.out.print(vect[i] + " ");
         }
